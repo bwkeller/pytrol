@@ -1,6 +1,7 @@
 #!/usr/bin/python
 import glob
 import itertools
+import numpy as np
 import pynbody as pyn
 
 def gasdir_iter(directory):
