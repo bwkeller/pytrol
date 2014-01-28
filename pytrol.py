@@ -3,6 +3,7 @@ import glob
 import itertools
 import numpy as np
 import pynbody as pyn
+import multiprocessing
 
 def gasdir_iter(directory):
     """
@@ -27,3 +28,14 @@ def time_sequence(function, directory):
     tmplist = np.array(tmplist)
     return (tmplist[:,0], tmplist[:,1])
 
+def parallel_process(function, directory, poolsize=64):
+	"""
+	Take a function with a single argument (a pynbody-loadable snapshot filename), and returns a list of that function run
+	on each snapshot in directory. Uses the multiprocessing library to load and process the files in parallel.
+	"""
+	dirglob = glob.glob(directory+'/*.[0-9]???[0-9]')
+	dirglob.sort()
+	pool = multiprocessing.Pool(processes=poolsize)
+	tmplist = []
+	results = []
+	return np.array(pool.map(function, dirglob))
